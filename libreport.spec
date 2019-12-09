@@ -2,7 +2,7 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 1
+Release: 3
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -115,6 +115,14 @@ Obsoletes: %{name}-python3 < %{version}-%{release}
 
 %description -n python3-libreport
 Python 3 bindings for report-libs.
+
+%package rhel
+Summary: Default configuration for reporting bugs via Red Hat infrastructure
+Requires: %{name} = %{version}-%{release}
+
+%description rhel
+Default configuration for reporting bugs via Red Hat infrastructure.
+It is used to easily configure the reporting process for Red Hat systems.
 
 %package_help
 %prep
@@ -295,6 +303,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libreport/problem_details_widget.h
 %{_includedir}/libreport/problem_details_dialog.h
 %{_includedir}/libreport/problem_utils.h
+%{_includedir}/libreport/report_result.h
 %{_includedir}/libreport/ureport.h
 %{_includedir}/libreport/reporters.h
 %{_includedir}/libreport/global_configuration.h
@@ -322,6 +331,26 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files -n python3-libreport
 %{python3_sitearch}/report/
 %{python3_sitearch}/reportclient/
+
+%files rhel
+%{_datadir}/%{name}/workflows/workflow_RHELCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_RHELKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_RHELPython.xml
+%{_datadir}/%{name}/workflows/workflow_RHELvmcore.xml
+%{_datadir}/%{name}/workflows/workflow_RHELxorg.xml
+%{_datadir}/%{name}/workflows/workflow_RHELLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_RHELJava.xml
+%{_datadir}/%{name}/workflows/workflow_RHELJavaScript.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataJava.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataPython.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDatavmcore.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataxorg.xml
+%{_datadir}/%{name}/workflows/workflow_RHELAddDataJavaScript.xml
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel_add_data.conf
 
 %files help
 %{_mandir}/man1/report-cli.1.gz
@@ -367,7 +396,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/bugzilla_formatdup.conf.5.*
 %{_mandir}/man5/bugzilla_format_analyzer_libreport.conf.5.*
 %{_mandir}/man5/bugzilla_format_kernel.conf.5.*
+%{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Sat Nov 23 2019 fangyufa<fangyufa1@huawei.com> - 2.10.1-3
+- add rhel package
+
+* Tue Nov 19 2019 fangyufa<fangyufa1@huawei.com> - 2.10.1-2
+- Type:enhancement
+- ID:NA
+- SUG:NA
+- DESC:reinclude report_result.h in devel package
+
 * Tue Sep 10 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-1
 - Package init
