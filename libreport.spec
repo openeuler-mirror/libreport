@@ -2,7 +2,7 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 3
+Release: 4
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -129,7 +129,7 @@ It is used to easily configure the reporting process for Red Hat systems.
 %autosetup -n %{name}-%{version} -p1 -S git
 
 %build
-autoconf
+./autogen.sh
 
 CFLAGS="%{optflags} -Werror"
 %configure --enable-import-rhtsupport-cert  --enable-doxygen-docs --disable-silent-rules
@@ -399,6 +399,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Tue Dec 31 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-4
+- Update tar package
+
 * Sat Nov 23 2019 fangyufa<fangyufa1@huawei.com> - 2.10.1-3
 - add rhel package
 
