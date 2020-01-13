@@ -2,11 +2,13 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 4
+Release: 5
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
 Source:  https://github.com/abrt/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
+
+Patch9000: fix-bug-delete-gtk-deprecation-warnings.patch
 
 BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python2-devel python3-devel
 BuildRequires: gettext libxml2-devel libtar-devel intltool libtool texinfo asciidoc xmlto
@@ -23,7 +25,6 @@ Requires: lz4
 Requires: libreport = %{version}-%{release}
 Requires: fros >= 1.0
 Requires: curl
-
 
 Provides:  %{name}-filesystem
 Obsoletes: %{name}-filesystem
@@ -125,13 +126,14 @@ Default configuration for reporting bugs via Red Hat infrastructure.
 It is used to easily configure the reporting process for Red Hat systems.
 
 %package_help
+
 %prep
-%autosetup -n %{name}-%{version} -p1 -S git
+%autosetup -n %{name}-%{version} -p1
 
 %build
 ./autogen.sh
 
-CFLAGS="%{optflags} -Werror"
+CFLAGS="%{optflags}"
 %configure --enable-import-rhtsupport-cert  --enable-doxygen-docs --disable-silent-rules
 
 %make_build
@@ -399,6 +401,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Mon Jan 13 2020 chengquan <chengquan3@huawei.com> - 2.10.1-5
+- fix bug in new glibc version
+
 * Tue Dec 31 2019 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-4
 - Update tar package
 
