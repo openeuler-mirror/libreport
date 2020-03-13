@@ -1,8 +1,9 @@
 %define _unpackaged_files_terminate_build 0
+%bcond_with python2_libreport
 
 Name:    libreport
 Version: 2.10.1
-Release: 5
+Release: 6
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -97,6 +98,7 @@ Obsoletes: %{name}-gtk-devel
 %description devel
 Development libraries and headers for libreport
 
+%if %{with python2_libreport}
 %package -n python2-libreport
 Summary:   Python2 bindings for report-libs
 Requires:  libreport = %{version}-%{release}
@@ -106,6 +108,7 @@ Obsoletes: %{name}-python < %{version}-%{release}
 
 %description -n python2-libreport
 Python bindings for report-libs.
+%endif
 
 %package -n python3-libreport
 Summary:   Python3 bindings for report-libs
@@ -326,9 +329,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libreport/internal_libreport_gtk.h
 %{_libdir}/pkgconfig/libreport-gtk.pc
 
+%if %{with python2_libreport}
 %files -n python2-libreport
 %{python2_sitearch}/report/
 %{python2_sitearch}/reportclient/
+%endif
 
 %files -n python3-libreport
 %{python3_sitearch}/report/
@@ -401,6 +406,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Thu Mar 12 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-6
+- Remove some default installation packages
+
 * Mon Jan 13 2020 chengquan <chengquan3@huawei.com> - 2.10.1-5
 - fix bug in new glibc version
 
