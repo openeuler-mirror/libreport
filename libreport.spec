@@ -79,6 +79,10 @@ Obsoletes: %{name}-plugin-reportuploader
 Provides:  %{name}-anaconda
 Obsoletes: %{name}-anaconda
 
+%if %{without python2_libreport}
+Obsoletes: python2-libreport
+%endif
+
 %description
 Generic library for reporting various problems to destinations like mailing lists, regular files, remote servers and bug tracking tools.
 The library operates on problem data stored in the form of regular files in a directory (so called dump directory).
