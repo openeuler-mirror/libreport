@@ -3,7 +3,7 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 7
+Release: 8
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -17,8 +17,6 @@ BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
 BuildRequires: sed json-c-devel gdb
 
-Requires: python-rhsm
-Requires: python3-subscription-manager-rhsm
 Requires: satyr >= 0.24
 Requires: glib2 >= 2.43
 Requires: xz
@@ -57,7 +55,6 @@ Obsoletes: %{name}-plugin-logger
 Provides:  %{name}-plugin-systemd-journal
 Obsoletes: %{name}-plugin-systemd-journal
 
-Provides:  %{name}-plugin-ureport
 Obsoletes: %{name}-plugin-ureport
 
 Provides:  %{name}-plugin-bugzilla
@@ -66,8 +63,6 @@ Obsoletes: %{name}-plugin-bugzilla
 Provides:  %{name}-plugin-mantisbt
 Obsoletes: %{name}-plugin-mantisbt
 
-
-Provides:  %{name}-plugin-rhtsupport
 Obsoletes: %{name}-plugin-rhtsupport
 
 Provides:  %{name}-compat
@@ -123,14 +118,6 @@ Obsoletes: %{name}-python3 < %{version}-%{release}
 
 %description -n python3-libreport
 Python 3 bindings for report-libs.
-
-%package rhel
-Summary: Default configuration for reporting bugs via Red Hat infrastructure
-Requires: %{name} = %{version}-%{release}
-
-%description rhel
-Default configuration for reporting bugs via Red Hat infrastructure.
-It is used to easily configure the reporting process for Red Hat systems.
 
 %package_help
 
@@ -234,13 +221,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #plugin-systemd-journal
 %{_bindir}/reporter-systemd-journal
 
-#plugin-ureport
-%config(noreplace) %{_sysconfdir}/libreport/plugins/ureport.conf
-%{_datadir}/%{name}/conf.d/plugins/ureport.conf
-%{_bindir}/reporter-ureport
-%{_datadir}/%{name}/events/report_uReport.xml
-%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.ureport.xml
-
 #plugin-bugzilla
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla.conf
 %{_datadir}/%{name}/conf.d/plugins/bugzilla.conf
@@ -263,15 +243,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_format_analyzer_libreport.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_formatdup_analyzer_libreport.conf
 %{_bindir}/reporter-mantisbt
-
-#plugin-rhtsupport
-%config(noreplace) %{_sysconfdir}/libreport/plugins/rhtsupport.conf
-%{_datadir}/%{name}/conf.d/plugins/rhtsupport.conf
-%{_datadir}/%{name}/events/report_RHTSupport.xml
-%{_datadir}/%{name}/events/report_RHTSupport_AddData.xml
-%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.rhtsupport.xml
-%config(noreplace) %{_sysconfdir}/libreport/events.d/rhtsupport_event.conf
-%{_bindir}/reporter-rhtsupport
 
 #compat
 %{_bindir}/report
@@ -343,26 +314,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python3_sitearch}/report/
 %{python3_sitearch}/reportclient/
 
-%files rhel
-%{_datadir}/%{name}/workflows/workflow_RHELCCpp.xml
-%{_datadir}/%{name}/workflows/workflow_RHELKerneloops.xml
-%{_datadir}/%{name}/workflows/workflow_RHELPython.xml
-%{_datadir}/%{name}/workflows/workflow_RHELvmcore.xml
-%{_datadir}/%{name}/workflows/workflow_RHELxorg.xml
-%{_datadir}/%{name}/workflows/workflow_RHELLibreport.xml
-%{_datadir}/%{name}/workflows/workflow_RHELJava.xml
-%{_datadir}/%{name}/workflows/workflow_RHELJavaScript.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataCCpp.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataJava.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataKerneloops.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataLibreport.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataPython.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDatavmcore.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataxorg.xml
-%{_datadir}/%{name}/workflows/workflow_RHELAddDataJavaScript.xml
-%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel.conf
-%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_rhel_add_data.conf
-
 %files help
 %{_mandir}/man1/report-cli.1.gz
 %{_mandir}/man1/report-newt.1.gz
@@ -410,6 +361,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Mon Mar 30 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-8
+- remove useless functions
+
 * Sat Mar 21 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-7
 - add necessary BuildRequires
 
