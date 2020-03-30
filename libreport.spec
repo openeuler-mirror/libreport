@@ -57,7 +57,6 @@ Obsoletes: %{name}-plugin-systemd-journal
 
 Obsoletes: %{name}-plugin-ureport
 
-Provides:  %{name}-plugin-bugzilla
 Obsoletes: %{name}-plugin-bugzilla
 
 Provides:  %{name}-plugin-mantisbt
@@ -220,20 +219,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 #plugin-systemd-journal
 %{_bindir}/reporter-systemd-journal
-
-#plugin-bugzilla
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla.conf
-%{_datadir}/%{name}/conf.d/plugins/bugzilla.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_analyzer_libreport.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_kernel.conf
-%{_datadir}/%{name}/events/report_Bugzilla.xml
-%{_datadir}/%{name}/events/watch_Bugzilla.xml
-%config(noreplace) %{_sysconfdir}/libreport/events/report_Bugzilla.conf
-%config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_event.conf
-%{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.bugzilla.xml
-%{_bindir}/reporter-bugzilla
 
 #plugin-mantisbt
 %config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt.conf
