@@ -1,9 +1,8 @@
 %define _unpackaged_files_terminate_build 0
-%bcond_with python2_libreport
 
 Name:    libreport
-Version: 2.10.1
-Release: 8
+Version: 2.13.1
+Release: 1
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -11,11 +10,11 @@ Source:  https://github.com/abrt/%{name}/archive/%{version}/%{name}-%{version}.t
 
 Patch9000: fix-bug-delete-gtk-deprecation-warnings.patch
 
-BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python2-devel python3-devel
+BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python3-devel
 BuildRequires: gettext libxml2-devel libtar-devel intltool libtool texinfo asciidoc xmlto
-BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43 git doxygen
+BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43 git-core doxygen
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
-BuildRequires: sed json-c-devel gdb
+BuildRequires: sed json-c-devel gdb nettle-devel
 
 Requires: satyr >= 0.24
 Requires: glib2 >= 2.43
@@ -24,6 +23,7 @@ Requires: lz4
 Requires: libreport = %{version}-%{release}
 Requires: fros >= 1.0
 Requires: curl
+Requires: nettle
 
 Provides:  %{name}-filesystem
 Obsoletes: %{name}-filesystem
@@ -73,10 +73,6 @@ Obsoletes: %{name}-plugin-reportuploader
 Provides:  %{name}-anaconda
 Obsoletes: %{name}-anaconda
 
-%if %{without python2_libreport}
-Obsoletes: python2-libreport
-%endif
-
 %description
 Generic library for reporting various problems to destinations like mailing lists, regular files, remote servers and bug tracking tools.
 The library operates on problem data stored in the form of regular files in a directory (so called dump directory).
@@ -96,24 +92,10 @@ Obsoletes: %{name}-gtk-devel
 %description devel
 Development libraries and headers for libreport
 
-%if %{with python2_libreport}
-%package -n python2-libreport
-Summary:   Python2 bindings for report-libs
-Requires:  libreport = %{version}-%{release}
-Requires:  python2-dnf
-Provides:  %{name}-python = %{version}-%{release}
-Obsoletes: %{name}-python < %{version}-%{release}
-
-%description -n python2-libreport
-Python bindings for report-libs.
-%endif
-
 %package -n python3-libreport
 Summary:   Python3 bindings for report-libs
 Requires:  libreport = %{version}-%{release}
 Requires:  python3-dnf
-Provides:  %{name}-python3 = %{version}-%{release}
-Obsoletes: %{name}-python3 < %{version}-%{release}
 
 %description -n python3-libreport
 Python 3 bindings for report-libs.
@@ -179,7 +161,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/%{name}/ignored_words.conf
 %{_datadir}/%{name}/conf.d/libreport.conf
 %{_libdir}/libreport.so.*
-%{_libdir}/libabrt_dbus.so.*
 %{_datadir}/augeas/lenses/libreport.aug
 #filesystem
 %dir %{_sysconfdir}/%{name}/
@@ -201,8 +182,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #gtk
 %{_bindir}/report-gtk
 %{_libdir}/libreport-gtk.so.*
-%config(noreplace) %{_sysconfdir}/libreport/events.d/emergencyanalysis_event.conf
-%{_datadir}/%{name}/events/report_EmergencyAnalysis.xml
 
 #plugin-kerneloops
 %{_datadir}/%{name}/events/report_Kerneloops.xml
@@ -272,12 +251,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libreport/ureport.h
 %{_includedir}/libreport/reporters.h
 %{_includedir}/libreport/global_configuration.h
-%{_includedir}/libreport/internal_abrt_dbus.h
 %{_includedir}/libreport/internal_libreport.h
 %{_includedir}/libreport/xml_parser.h
 %{_includedir}/libreport/helpers
 %{_libdir}/libreport.so
-%{_libdir}/libabrt_dbus.so
 %{_libdir}/pkgconfig/libreport.pc
 %dir %{_includedir}/libreport
 #web-devel
@@ -289,12 +266,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libreport/internal_libreport_gtk.h
 %{_libdir}/pkgconfig/libreport-gtk.pc
 
-%if %{with python2_libreport}
-%files -n python2-libreport
-%{python2_sitearch}/report/
-%{python2_sitearch}/reportclient/
-%endif
-
 %files -n python3-libreport
 %{python3_sitearch}/report/
 %{python3_sitearch}/reportclient/
@@ -303,7 +274,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man1/report-cli.1.gz
 %{_mandir}/man1/report-newt.1.gz
 %{_mandir}/man1/report-gtk.1.gz
-%{_mandir}/man5/emergencyanalysis_event.conf.5.*
 %{_mandir}/man*/reporter-kerneloops.*
 %{_mandir}/man5/report_Logger.conf.5.*
 %{_mandir}/man5/print_event.conf.5.*
@@ -346,6 +316,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Tue Jul 28 2020 xinghe <xinghe1@huawei.com> - 2.13.1-1
+- update version to 2.13.1
+
 * Mon Mar 30 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-8
 - remove useless functions
 
