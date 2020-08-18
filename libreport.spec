@@ -3,7 +3,7 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 8
+Release: 9
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -346,6 +346,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Tue Aug 18 2020 wenzhanli<wenzhanli2@huawei.com> - 2.10.1-9
+- add release version for update
+
 * Mon Mar 30 2020 openEuler Buildteam <buildteam@openeuler.org> - 2.10.1-8
 - remove useless functions
 
