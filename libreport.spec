@@ -2,7 +2,7 @@
 
 Name:    libreport
 Version: 2.13.1
-Release: 1
+Release: 2
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -96,6 +96,8 @@ Development libraries and headers for libreport
 Summary:   Python3 bindings for report-libs
 Requires:  libreport = %{version}-%{release}
 Requires:  python3-dnf
+Provides:  %{name}-python3 = %{version}-%{release}
+Obsoletes: %{name}-python3 < %{version}-%{release}
 
 %description -n python3-libreport
 Python 3 bindings for report-libs.
@@ -316,6 +318,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Fri Aug 21 2020 shixuantong <shixuantong@huawei.com> - 2.13.1-2
+- sovle nothing provides libreport-python3 problem
+
 * Tue Jul 28 2020 xinghe <xinghe1@huawei.com> - 2.13.1-1
 - update version to 2.13.1
 
