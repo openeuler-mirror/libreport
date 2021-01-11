@@ -2,7 +2,7 @@
 
 Name:    libreport
 Version: 2.13.1
-Release: 2
+Release: 3
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -16,6 +16,7 @@ BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
 BuildRequires: sed json-c-devel gdb nettle-devel
 
+Requires: libreport-filesystem = %{version}-%{release}
 Requires: satyr >= 0.24
 Requires: glib2 >= 2.43
 Requires: xz
@@ -25,53 +26,50 @@ Requires: fros >= 1.0
 Requires: curl
 Requires: nettle
 
-Provides:  %{name}-filesystem
-Obsoletes: %{name}-filesystem
+Provides:  %{name}-web = %{version}-%{release}
+Obsoletes: %{name}-web < %{version}-%{release}
 
-Provides:  %{name}-web
-Obsoletes: %{name}-web
-
-Provides:  %{name}-cli
-Obsoletes: %{name}-cli
+Provides:  %{name}-cli = %{version}-%{release}
+Obsoletes: %{name}-cli < %{version}-%{release}
 
 Provides:  report-newt = 0:0.23-1
 Obsoletes: report-newt < 0:0.23-1
 
-Provides:  %{name}-newt
-Obsoletes: %{name}-newt
+Provides:  %{name}-newt = %{version}-%{release}
+Obsoletes: %{name}-newt < %{version}-%{release}
 
 Provides: report-gtk = 0:0.23-1
 Obsoletes: report-gtk < 0:0.23-1
 
-Provides:  %{name}-gtk
-Obsoletes: %{name}-gtk
+Provides:  %{name}-gtk = %{version}-%{release}
+Obsoletes: %{name}-gtk < %{version}-%{release}
 
-Provides:  %{name}-plugin-kerneloops
-Obsoletes: %{name}-plugin-kerneloops
+Provides:  %{name}-plugin-kerneloops = %{version}-%{release}
+Obsoletes: %{name}-plugin-kerneloops < %{version}-%{release}
 
-Provides:  %{name}-plugin-logger
-Obsoletes: %{name}-plugin-logger
+Provides:  %{name}-plugin-logger = %{version}-%{release}
+Obsoletes: %{name}-plugin-logger < %{version}-%{release}
 
-Provides:  %{name}-plugin-systemd-journal
-Obsoletes: %{name}-plugin-systemd-journal
+Provides:  %{name}-plugin-systemd-journal = %{version}-%{release}
+Obsoletes: %{name}-plugin-systemd-journal < %{version}-%{release}
 
-Obsoletes: %{name}-plugin-ureport
+Obsoletes: %{name}-plugin-ureport < %{version}-%{release}
 
-Obsoletes: %{name}-plugin-bugzilla
+Obsoletes: %{name}-plugin-bugzilla < %{version}-%{release}
 
-Provides:  %{name}-plugin-mantisbt
-Obsoletes: %{name}-plugin-mantisbt
+Provides:  %{name}-plugin-mantisbt = %{version}-%{release}
+Obsoletes: %{name}-plugin-mantisbt < %{version}-%{release}
 
-Obsoletes: %{name}-plugin-rhtsupport
+Obsoletes: %{name}-plugin-rhtsupport < %{version}-%{release}
 
-Provides:  %{name}-compat
-Obsoletes: %{name}-compat
+Provides:  %{name}-compat = %{version}-%{release}
+Obsoletes: %{name}-compat < %{version}-%{release}
 
-Provides:  %{name}-plugin-reportuploader
-Obsoletes: %{name}-plugin-reportuploader
+Provides:  %{name}-plugin-reportuploader = %{version}-%{release}
+Obsoletes: %{name}-plugin-reportuploader < %{version}-%{release}
 
-Provides:  %{name}-anaconda
-Obsoletes: %{name}-anaconda
+Provides:  %{name}-anaconda = %{version}-%{release}
+Obsoletes: %{name}-anaconda < %{version}-%{release}
 
 %description
 Generic library for reporting various problems to destinations like mailing lists, regular files, remote servers and bug tracking tools.
@@ -79,15 +77,22 @@ The library operates on problem data stored in the form of regular files in a di
 The library provides a low level API (dump_dir.h) for creating and modifying dump directories, a high level API allowing to avoid the need to work with dump directories (problem_data.h), and a set of tools that file reports.
 The library also provides an infrastructure (run_event.h, report_event.conf) for automatic execution of shell scripts working with dump directories.
 
+%package filesystem
+Summary: Filesystem layout for libreport
+BuildArch: noarch
+
+%description filesystem
+Filesystem layout for libreport
+
 %package devel
 Summary: Development libraries and headers for libreport
 Requires: libreport = %{version}-%{release}
 
-Provides:  %{name}-web-devel
-Obsoletes: %{name}-web-devel
+Provides:  %{name}-web-devel = %{version}-%{release}
+Obsoletes: %{name}-web-devel < %{version}-%{release}
 
-Provides:  %{name}-gtk-devel
-Obsoletes: %{name}-gtk-devel
+Provides:  %{name}-gtk-devel = %{version}-%{release}
+Obsoletes: %{name}-gtk-devel < %{version}-%{release}
 
 %description devel
 Development libraries and headers for libreport
@@ -164,17 +169,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{name}/conf.d/libreport.conf
 %{_libdir}/libreport.so.*
 %{_datadir}/augeas/lenses/libreport.aug
-#filesystem
-%dir %{_sysconfdir}/%{name}/
-%dir %{_sysconfdir}/%{name}/events.d/
-%dir %{_sysconfdir}/%{name}/events/
-%dir %{_sysconfdir}/%{name}/workflows.d/
-%dir %{_datadir}/%{name}/
-%dir %{_datadir}/%{name}/conf.d/
-%dir %{_datadir}/%{name}/conf.d/plugins/
-%dir %{_datadir}/%{name}/events/
-%dir %{_datadir}/%{name}/workflows/
-%dir %{_sysconfdir}/%{name}/plugins/
 #web
 %{_libdir}/libreport-web.so.*
 #cli
@@ -231,6 +225,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_anaconda_event.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_anaconda.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup_anaconda.conf
+
+%files filesystem
+%dir %{_sysconfdir}/%{name}/
+%dir %{_sysconfdir}/%{name}/events.d/
+%dir %{_sysconfdir}/%{name}/events/
+%dir %{_sysconfdir}/%{name}/workflows.d/
+%dir %{_datadir}/%{name}/
+%dir %{_datadir}/%{name}/conf.d/
+%dir %{_datadir}/%{name}/conf.d/plugins/
+%dir %{_datadir}/%{name}/events/
+%dir %{_datadir}/%{name}/workflows/
+%dir %{_sysconfdir}/%{name}/plugins/
 
 %files devel
 # Public api headers:
@@ -318,6 +324,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Sat Jan 09 2021 shixuantong <shixuantong@huawei.com> - 2.13.1-3
+- Split filesystem package and add version limit for some provides symbol
+
 * Fri Aug 21 2020 shixuantong <shixuantong@huawei.com> - 2.13.1-2
 - sovle nothing provides libreport-python3 problem
 
