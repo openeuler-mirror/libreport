@@ -3,7 +3,7 @@
 
 Name:    libreport
 Version: 2.10.1
-Release: 9
+Release: 10
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -15,90 +15,55 @@ BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python2-devel
 BuildRequires: gettext libxml2-devel libtar-devel intltool libtool texinfo asciidoc xmlto
 BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43 git doxygen
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
-BuildRequires: sed json-c-devel gdb
+BuildRequires: json-c-devel gdb
 
-Requires: satyr >= 0.24
-Requires: glib2 >= 2.43
-Requires: xz
-Requires: lz4
-Requires: libreport = %{version}-%{release}
-Requires: fros >= 1.0
-Requires: curl
+Requires: satyr >= 0.24 glib2 >= 2.43 xz lz4
 
-Provides:  %{name}-filesystem
-Obsoletes: %{name}-filesystem
+Obsoletes: %{name}-plugin-bugzilla %{name}-plugin-mantisbt %{name}-plugin-ureport %{name}-plugin-rhtsupport %{name}-rhel
 
-Provides:  %{name}-web
-Obsoletes: %{name}-web
-
-Provides:  %{name}-cli
-Obsoletes: %{name}-cli
-
-Provides:  report-newt = 0:0.23-1
-Obsoletes: report-newt < 0:0.23-1
-
-Provides:  %{name}-newt
-Obsoletes: %{name}-newt
-
-Provides: report-gtk = 0:0.23-1
-Obsoletes: report-gtk < 0:0.23-1
-
-Provides:  %{name}-gtk
-Obsoletes: %{name}-gtk
-
-Provides:  %{name}-plugin-kerneloops
-Obsoletes: %{name}-plugin-kerneloops
-
-Provides:  %{name}-plugin-logger
-Obsoletes: %{name}-plugin-logger
-
-Provides:  %{name}-plugin-systemd-journal
-Obsoletes: %{name}-plugin-systemd-journal
-
-Obsoletes: %{name}-plugin-ureport
-
-Obsoletes: %{name}-plugin-bugzilla
-
-Provides:  %{name}-plugin-mantisbt
-Obsoletes: %{name}-plugin-mantisbt
-
-Obsoletes: %{name}-plugin-rhtsupport
-
-Provides:  %{name}-compat
-Obsoletes: %{name}-compat
-
-Provides:  %{name}-plugin-reportuploader
-Obsoletes: %{name}-plugin-reportuploader
-
-Provides:  %{name}-anaconda
-Obsoletes: %{name}-anaconda
-
-%if %{without python2_libreport}
-Obsoletes: python2-libreport
-%endif
+%if %{without python2_libreport}  
+Obsoletes: python2-libreport    
+%endif       
 
 %description
-Generic library for reporting various problems to destinations like mailing lists, regular files, remote servers and bug tracking tools.
-The library operates on problem data stored in the form of regular files in a directory (so called dump directory).
-The library provides a low level API (dump_dir.h) for creating and modifying dump directories, a high level API allowing to avoid the need to work with dump directories (problem_data.h), and a set of tools that file reports.
-The library also provides an infrastructure (run_event.h, report_event.conf) for automatic execution of shell scripts working with dump directories.
+Libraries providing API for reporting different problems in applications
+to different bug targets like Bugzilla, ftp, trac, etc...
+
+%package filesystem
+Summary: Filesystem layout for libreport
+BuildArch: noarch
+
+%description filesystem
+Filesystem layout for libreport
 
 %package devel
 Summary: Development libraries and headers for libreport
 Requires: libreport = %{version}-%{release}
 
-Provides:  %{name}-web-devel
-Obsoletes: %{name}-web-devel
 
-Provides:  %{name}-gtk-devel
-Obsoletes: %{name}-gtk-devel
 
 %description devel
 Development libraries and headers for libreport
 
+%package web
+Summary: Library providing network API for libreport
+Requires: libreport = %{version}-%{release}
+
+%description web
+Library providing network API for libreport
+
+%package web-devel
+Summary: Development headers for libreport-web
+Requires: libreport-web = %{version}-%{release}
+
+%description web-devel
+Development headers for libreport-web
+
+
+
 %if %{with python2_libreport}
 %package -n python2-libreport
-Summary:   Python2 bindings for report-libs
+Summary:   Python bindings for report-libs
 Requires:  libreport = %{version}-%{release}
 Requires:  python2-dnf
 Provides:  %{name}-python = %{version}-%{release}
@@ -118,6 +83,91 @@ Obsoletes: %{name}-python3 < %{version}-%{release}
 %description -n python3-libreport
 Python 3 bindings for report-libs.
 
+%package cli
+Summary:  libreport's command line interface
+Requires: %{name} = %{version}-%{release}
+
+%description cli
+This package contains simple command line tool for working
+with problem dump reports
+
+%package newt
+Summary:  libreport's newt interface
+Requires: %{name} = %{version}-%{release}
+Provides: report-newt = 0:0.23-1
+Obsoletes: report-newt < 0:0.23-1
+
+%description newt
+This package contains a simple newt application for reporting
+bugs
+
+%package gtk
+Summary: GTK front-end for libreport
+Requires: libreport = %{version}-%{release}
+Requires: libreport-plugin-reportuploader = %{version}-%{release}
+Requires: fros >= 1.0
+Provides: report-gtk = 0:0.23-1
+Obsoletes: report-gtk < 0:0.23-1
+
+%description gtk
+Applications for reporting bugs using libreport backend
+
+%package gtk-devel
+Summary: Development libraries and headers for libreport
+Requires: libreport-gtk = %{version}-%{release}
+
+%description gtk-devel
+Development libraries and headers for libreport-gtk
+
+%package plugin-kerneloops
+Summary: %{name}'s kerneloops reporter plugin
+Requires: curl
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-web = %{version}-%{release}
+
+%description plugin-kerneloops
+This package contains plugin which sends kernel crash information to specified
+server, usually to kerneloops.org.
+
+%package plugin-logger
+Summary: %{name}'s logger reporter plugin
+Requires: %{name} = %{version}-%{release}
+
+%description plugin-logger
+The simple reporter plugin which writes a report to a specified file.
+
+%package plugin-systemd-journal
+Summary: %{name}'s systemd journal reporter plugin
+Requires: %{name} = %{version}-%{release}
+
+%description plugin-systemd-journal
+The simple reporter plugin which writes a report to the systemd journal.
+
+%package compat
+Summary: %{name}'s compat layer for obsoleted 'report' package
+Requires: libreport = %{version}-%{release}
+
+%description compat
+Provides 'report' command-line tool.
+
+%package plugin-reportuploader
+Summary: %{name}'s reportuploader plugin
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-web = %{version}-%{release}
+
+%description plugin-reportuploader
+Plugin to report bugs into anonymous FTP site associated with ticketing system.
+
+%package anaconda
+Summary: Default configuration for reporting anaconda bugs
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-plugin-reportuploader = %{version}-%{release}
+
+%description anaconda
+Default configuration for reporting Anaconda problems or uploading the gathered
+data over ftp/scp...
+
+
 %package_help
 
 %prep
@@ -127,9 +177,13 @@ Python 3 bindings for report-libs.
 ./autogen.sh
 
 CFLAGS="%{optflags}"
-%configure --enable-import-rhtsupport-cert  --enable-doxygen-docs --disable-silent-rules
+%configure --enable-doxygen-docs --disable-silent-rules
 
-%make_build
+rm -rf  po/.intltool-merge-cache*
+rm -rf  src/plugins/*.xml
+rm -rf  src/workflows/*.xml
+
+make
 
 %install
 %make_install
@@ -181,7 +235,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/libreport.so.*
 %{_libdir}/libabrt_dbus.so.*
 %{_datadir}/augeas/lenses/libreport.aug
-#filesystem
+%files filesystem
 %dir %{_sysconfdir}/%{name}/
 %dir %{_sysconfdir}/%{name}/events.d/
 %dir %{_sysconfdir}/%{name}/events/
@@ -192,67 +246,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{_datadir}/%{name}/events/
 %dir %{_datadir}/%{name}/workflows/
 %dir %{_sysconfdir}/%{name}/plugins/
-#web
-%{_libdir}/libreport-web.so.*
-#cli
-%{_bindir}/report-cli
-#newt
-%{_bindir}/report-newt
-#gtk
-%{_bindir}/report-gtk
-%{_libdir}/libreport-gtk.so.*
-%config(noreplace) %{_sysconfdir}/libreport/events.d/emergencyanalysis_event.conf
-%{_datadir}/%{name}/events/report_EmergencyAnalysis.xml
 
-#plugin-kerneloops
-%{_datadir}/%{name}/events/report_Kerneloops.xml
-%{_bindir}/reporter-kerneloops
-
-#plugin-logger
-%config(noreplace) %{_sysconfdir}/libreport/events/report_Logger.conf
-%{_datadir}/%{name}/events/report_Logger.xml
-%{_datadir}/%{name}/workflows/workflow_Logger.xml
-%{_datadir}/%{name}/workflows/workflow_LoggerCCpp.xml
-%config(noreplace) %{_sysconfdir}/libreport/events.d/print_event.conf
-%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_logger.conf
-%{_bindir}/reporter-print
-
-#plugin-systemd-journal
-%{_bindir}/reporter-systemd-journal
-
-#plugin-mantisbt
-%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt.conf
-%{_datadir}/%{name}/conf.d/plugins/mantisbt.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_format.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_formatdup.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_format_analyzer_libreport.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_formatdup_analyzer_libreport.conf
-%{_bindir}/reporter-mantisbt
-
-#compat
-%{_bindir}/report
-
-#plugin-reportuploader
-%{_bindir}/reporter-upload
-%{_datadir}/%{name}/events/report_Uploader.xml
-%config(noreplace) %{_sysconfdir}/libreport/events.d/uploader_event.conf
-%{_datadir}/%{name}/workflows/workflow_Upload.xml
-%{_datadir}/%{name}/workflows/workflow_UploadCCpp.xml
-%config(noreplace) %{_sysconfdir}/libreport/plugins/upload.conf
-%{_datadir}/%{name}/conf.d/plugins/upload.conf
-%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_uploader.conf
-%config(noreplace) %{_sysconfdir}/libreport/events/report_Uploader.conf
-
-
-#anaconda
-%{_datadir}/%{name}/workflows/workflow_AnacondaUpload.xml
-%config(noreplace) %{_sysconfdir}/libreport/workflows.d/anaconda_event.conf
-%config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_anaconda_event.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_anaconda.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup_anaconda.conf
 
 %files devel
-# Public api headers:
+
 %doc apidoc/html/*.{html,png,css,js}
 %{_includedir}/libreport/libreport_types.h
 %{_includedir}/libreport/client.h
@@ -280,14 +277,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/libabrt_dbus.so
 %{_libdir}/pkgconfig/libreport.pc
 %dir %{_includedir}/libreport
-#web-devel
+
+%files web
+%{_libdir}/libreport-web.so.*
+
+%files web-devel
 %{_libdir}/libreport-web.so
 %{_includedir}/libreport/libreport_curl.h
 %{_libdir}/pkgconfig/libreport-web.pc
-#gtk-devel
-%{_libdir}/libreport-gtk.so
-%{_includedir}/libreport/internal_libreport_gtk.h
-%{_libdir}/pkgconfig/libreport-gtk.pc
+
 
 %if %{with python2_libreport}
 %files -n python2-libreport
@@ -299,53 +297,94 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python3_sitearch}/report/
 %{python3_sitearch}/reportclient/
 
+%files cli
+%{_bindir}/report-cli
+
+%files newt
+%{_bindir}/report-newt
+
+%files gtk
+%{_bindir}/report-gtk
+%{_libdir}/libreport-gtk.so.*
+%config(noreplace) %{_sysconfdir}/libreport/events.d/emergencyanalysis_event.conf
+%{_datadir}/%{name}/events/report_EmergencyAnalysis.xml
+
+%files gtk-devel
+%{_libdir}/libreport-gtk.so
+%{_includedir}/libreport/internal_libreport_gtk.h
+%{_libdir}/pkgconfig/libreport-gtk.pc
+
+%files plugin-kerneloops
+%{_datadir}/%{name}/events/report_Kerneloops.xml
+%{_bindir}/reporter-kerneloops
+
+%files plugin-logger
+%config(noreplace) %{_sysconfdir}/libreport/events/report_Logger.conf
+%{_datadir}/%{name}/events/report_Logger.xml
+%{_datadir}/%{name}/workflows/workflow_Logger.xml
+%{_datadir}/%{name}/workflows/workflow_LoggerCCpp.xml
+%config(noreplace) %{_sysconfdir}/libreport/events.d/print_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_logger.conf
+%{_bindir}/reporter-print
+
+%files plugin-systemd-journal
+%{_bindir}/reporter-systemd-journal
+
+
+%files compat
+%{_bindir}/report
+
+%files plugin-reportuploader
+%{_bindir}/reporter-upload
+%{_datadir}/%{name}/events/report_Uploader.xml
+%config(noreplace) %{_sysconfdir}/libreport/events.d/uploader_event.conf
+%{_datadir}/%{name}/workflows/workflow_Upload.xml
+%{_datadir}/%{name}/workflows/workflow_UploadCCpp.xml
+%config(noreplace) %{_sysconfdir}/libreport/plugins/upload.conf
+%{_datadir}/%{name}/conf.d/plugins/upload.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_uploader.conf
+%config(noreplace) %{_sysconfdir}/libreport/events/report_Uploader.conf
+
+%files anaconda
+%{_datadir}/%{name}/workflows/workflow_AnacondaRHEL.xml
+%{_datadir}/%{name}/workflows/workflow_AnacondaUpload.xml
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/anaconda_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/events.d/bugzilla_anaconda_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_anaconda.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup_anaconda.conf
+
 %files help
+%{_mandir}/man5/libreport.conf.5*
+%{_mandir}/man5/report_event.conf.5*
+%{_mandir}/man5/forbidden_words.conf.5*
+%{_mandir}/man5/ignored_words.conf.5*
 %{_mandir}/man1/report-cli.1.gz
 %{_mandir}/man1/report-newt.1.gz
 %{_mandir}/man1/report-gtk.1.gz
 %{_mandir}/man5/emergencyanalysis_event.conf.5.*
 %{_mandir}/man*/reporter-kerneloops.*
-%{_mandir}/man5/report_Logger.conf.5.*
 %{_mandir}/man5/print_event.conf.5.*
 %{_mandir}/man5/report_logger.conf.5.*
 %{_mandir}/man*/reporter-print.*
+%{_mandir}/man5/report_Logger.conf.5.*
 %{_mandir}/man*/reporter-systemd-journal.*
-%{_mandir}/man1/reporter-ureport.1.gz
-%{_mandir}/man5/ureport.conf.5.gz
-%{_mandir}/man1/reporter-mantisbt.1.gz
-%{_mandir}/man5/mantisbt.conf.5.*
-%{_mandir}/man5/mantisbt_format.conf.5.*
-%{_mandir}/man5/mantisbt_formatdup.conf.5.*
-%{_mandir}/man5/mantisbt_format_analyzer_libreport.conf.5.*
-%{_mandir}/man5/mantisbt_formatdup_analyzer_libreport.conf.5.*
-%{_mandir}/man1/reporter-rhtsupport.1.gz
-%{_mandir}/man5/rhtsupport.conf.5.*
-%{_mandir}/man5/rhtsupport_event.conf.5.*
 %{_mandir}/man1/report.1.gz
 %{_mandir}/man*/reporter-upload.*
 %{_mandir}/man5/uploader_event.conf.5.*
-%{_mandir}/man1/reporter-rhtsupport.1.gz
-%{_mandir}/man5/rhtsupport.conf.5.*
-%{_mandir}/man5/rhtsupport_event.conf.5.*
+%{_mandir}/man5/upload.conf.5.*
+%{_mandir}/man5/report_uploader.conf.5.*
+%{_mandir}/man5/report_Uploader.conf.5.*
 %{_mandir}/man5/anaconda_event.conf.5.*
-%{_mandir}/man5/bugzilla_anaconda_event.conf.5.*
-%{_mandir}/man5/bugzilla_format_anaconda.conf.5.*
-%{_mandir}/man5/bugzilla_formatdup_anaconda.conf.5.*
-%{_mandir}/man5/libreport.conf.5*
-%{_mandir}/man5/report_event.conf.5*
-%{_mandir}/man5/forbidden_words.conf.5*
-%{_mandir}/man5/ignored_words.conf.5*
-%{_mandir}/man1/reporter-bugzilla.1.gz
-%{_mandir}/man5/report_Bugzilla.conf.5.*
-%{_mandir}/man5/bugzilla_event.conf.5.*
-%{_mandir}/man5/bugzilla.conf.5.*
-%{_mandir}/man5/bugzilla_format.conf.5.*
-%{_mandir}/man5/bugzilla_formatdup.conf.5.*
-%{_mandir}/man5/bugzilla_format_analyzer_libreport.conf.5.*
-%{_mandir}/man5/bugzilla_format_kernel.conf.5.*
-%{_mandir}/man5/report_rhel.conf.5.*
+
 
 %changelog
+* Thu Jan 14 2021 wangjie<wangjie294@huawei.com> - 2.10.1-10
+- Type:bugfix
+- CVE:NA
+- SUG:NA
+- DESC:split sub-package
+       cut reporter-mantisbt support
+
 * Tue Aug 18 2020 wenzhanli<wenzhanli2@huawei.com> - 2.10.1-9
 - add release version for update
 
