@@ -9,19 +9,19 @@ Subject: [PATCH] tar2
  libreport-2.10.1/src/gui-wizard-gtk/Makefile.am | 1 -
  2 files changed, 2 deletions(-)
 
-diff --git a/libreport-2.10.1/src/gtk-helpers/Makefile.am b/libreport-2.10.1/src/gtk-helpers/Makefile.am
-index ad33750..c4a92dd 100644
+diff --git a/src/gtk-helpers/Makefile.am b/src/gtk-helpers/Makefile.am
+index 7d916cc..808d701 100644
 --- a/src/gtk-helpers/Makefile.am
 +++ b/src/gtk-helpers/Makefile.am
-@@ -33,7 +33,6 @@ libreport_gtk_la_CPPFLAGS = \
+@@ -34,7 +34,6 @@ libreport_gtk_la_CPPFLAGS = \
      $(GLIB_CFLAGS) \
      $(GIO_CFLAGS) \
      -DWORKFLOWS_DIR=\"$(WORKFLOWS_DIR)\" \
 -    -DGDK_DISABLE_DEPRECATION_WARNINGS \
      -D_GNU_SOURCE
  libreport_gtk_la_LDFLAGS = \
-     -version-info 0:1:0
-diff --git a/libreport-2.10.1/src/gui-wizard-gtk/Makefile.am b/libreport-2.10.1/src/gui-wizard-gtk/Makefile.am
+     -version-info 1:0:0
+diff --git a/src/gui-wizard-gtk/Makefile.am b/src/gui-wizard-gtk/Makefile.am
 index fce33cb..37e7ba6 100644
 --- a/src/gui-wizard-gtk/Makefile.am
 +++ b/src/gui-wizard-gtk/Makefile.am
