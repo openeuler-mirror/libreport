@@ -2,7 +2,7 @@
 
 Name:    libreport
 Version: 2.13.1
-Release: 4
+Release: 5 
 License: GPLv2+
 Summary: Generic library for reporting various problems
 URL:     https://abrt.readthedocs.org/
@@ -14,7 +14,7 @@ BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python3-devel
 BuildRequires: gettext libxml2-devel libtar-devel intltool libtool texinfo asciidoc xmlto
 BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43 git-core doxygen
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
-BuildRequires: sed json-c-devel gdb nettle-devel
+BuildRequires: sed json-c-devel nettle-devel
 
 Requires: libreport-filesystem = %{version}-%{release}
 Requires: satyr >= 0.24
@@ -324,6 +324,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/report_rhel.conf.5.*
 
 %changelog
+* Tue Jul 20 2021 panxiaohe<panxiaohe@huawei.com> - 2.13.1-5
+- remove unnecessary BuildRequires: gdb
+
 * Fri Feb 05 2021 wuchaochao <wuchaochao4@huawei.com> - 2.13.1-4
 - package version  back
 
