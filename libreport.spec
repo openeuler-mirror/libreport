@@ -10,7 +10,7 @@ Source:  https://github.com/abrt/%{name}/archive/%{version}/%{name}-%{version}.t
 
 Patch9000: fix-bug-delete-gtk-deprecation-warnings.patch
 
-BuildRequires: dbus-devel gtk3-devel curl-devel desktop-file-utils python3-devel
+BuildRequires: dbus-devel gtk3-devel libcurl-devel desktop-file-utils python3-devel
 BuildRequires: gettext libxml2-devel libtar-devel intltool libtool texinfo asciidoc xmlto
 BuildRequires: newt-devel libproxy-devel satyr-devel >= 0.24 glib2-devel >= 2.43 git-core doxygen
 BuildRequires: glibc-all-langpacks xmlrpc-c-devel systemd-devel augeas-devel augeas xz lz4
